@@ -28,7 +28,6 @@
         </div>
 </template>
 <script lang="ts" setup>
-import { LoginService } from '@/pages/login/model_service/LoginService';
 import { useUserStore } from '@/stores/UserStore';
 import { ref, toRefs, watch } from 'vue';
 export interface Props{
@@ -47,11 +46,7 @@ watch(collapse, ()=>{
     activeNames.value = modelValue.value ? '' : ''
     emits('update:modelValue', collapse.value)
 })
-const loginService = new LoginService()
-const logOut = () => {
-   // 로그아웃 API 호출
-  loginService.logout()
-}
+
 </script>
 <style scoped>
 

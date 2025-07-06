@@ -1,14 +1,12 @@
-import { assign, get, isEmpty, isNil } from 'lodash'
+import { assign, get, isNil } from 'lodash'
 import camelcaseKeys from 'camelcase-keys'
 import type { AxiosResponse } from 'axios'
 
 export class APIResponse {
-    // public headers = {}
     public result = 0
     public status = 0
     public message = ''
     public data: any | null = null
-    // public parameters: string[] | null = null
 
     constructor(res?: Partial<AxiosResponse>) {
         if (isNil(res)) {
@@ -17,10 +15,6 @@ export class APIResponse {
         }
         const result = get(res.data, 'result')
         assign(this, camelcaseKeys(result ? res.data : { data: res.data }))
-
-        // if (!isNil(res.headers)) {
-        //     assign(this.headers, camelcaseKeys(res.headers))
-        // }
 
         if (isNil(result)) {
             this.result = res.status === 200 ? 200 : 0

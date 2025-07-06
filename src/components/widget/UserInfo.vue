@@ -18,13 +18,11 @@
                 <div class="content-item">
                     <div class="content">{{ userStore.loginTime }}</div> 
                 </div>
-                <!-- <el-button type="primary" style="margin-top: 12px" @click="logOut">로그아웃</el-button> -->
             </el-collapse-item>
         </el-collapse>
     </div>
 </template>
 <script lang="ts" setup>
-import { LoginService } from '@/pages/login/model_service/LoginService';
 import { useUserStore } from '@/stores/UserStore';
 import { ref, toRefs, watch } from 'vue';
 export interface Props{
@@ -40,11 +38,6 @@ watch(collapse, ()=>{
     activeNames.value = collapse.value ? '' : ''
 })
 
-const loginService = new LoginService()
-const logOut = () => {
-   // 로그아웃 API 호출
-  loginService.logout()
-}
 </script>
 <style scoped>
 

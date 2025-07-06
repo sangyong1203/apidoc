@@ -10,7 +10,6 @@ import type {  AxiosResponse, Method } from 'axios'
 import axios from 'axios'
 import { isNil, isEmpty } from 'lodash'
 import { useProgress } from '@/stores/Progress'
-import { useRequestDefence } from '@/stores/RequestDefence'
 
 let userInfo: any = {}
 let config:any = {}
@@ -19,12 +18,6 @@ export const request = (method: Method) => {
         return async (opt: RequestOption) => {
             const progressStore = useProgress()
             const navStore = useNavStore()
-
-            // (폭력 요청 해킹 방지.)---- 5초 내에 25번이상 요청시 5초동안 요청 못함.  ----- 
-            if(!url.includes('dashboard') && useRequestDefence().isOverRequest() == true ) {
-                Notification.warning('Please try again later.')
-                return new Promise<APIResponse>((resolve, reject)=>{})
-            }
 
             navStore.setLoading(true)
             config = makeRequiredRequestConfig(method)({ url, opt })
