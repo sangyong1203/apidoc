@@ -20,7 +20,10 @@
             <li>내용 : 변경 내용을 자세히 기록(변경된 회의록, 면담 위치, 즉 페이지 번호와 변경 내용을 기술한다.)</li>
         </ol>
         <el-table ref="tableRef" :data="obj.historyList" @scroll="getScrollPosition">
-            <el-table-column prop="version" label="버전" width="80">
+            <el-table-column prop="version" width="80">
+                <template #header>
+                    버전 <span style="color: red;">*</span>
+                </template>
                 <template #default="{ row }">
                     <div v-if="row.id">{{ row.version }}</div>
                     <el-input v-else v-model="row.version"></el-input>
@@ -29,7 +32,6 @@
             <el-table-column prop="updateDate" label="변경일" width="150">
                 <template #default="{ row }">
                     <div v-if="row.id">{{ row.updateDate }}</div>
-                    <!-- <el-input v-else v-model="row.updateDate"></el-input> -->
                     <SingleDatePicker
                     v-else
                     width="130px"
@@ -39,28 +41,38 @@
                 />
                 </template>
             </el-table-column>
-            <el-table-column prop="updateType" label="구분" width="180">
+            <el-table-column prop="updateType" width="180">
+                <template #header>
+                    구분 <span style="color: red;">*</span>
+                </template>
                 <template #default="{ row }">
                     <div v-if="row.id">{{ row.updateType }}</div>
                     <!-- <el-input v-else v-model="row.updateType"></el-input> -->
                     <DropdownList
-                    v-else
-                    width="160px"
-                    v-model="row.clientType"
-                    placeholder="Client Type 선택"
-                    :list="obj.clientTypeList"
-                    option-label="label"
-                    option-value="value"
-                />
+                        v-else
+                        width="160px"
+                        v-model="row.clientType"
+                        placeholder="Client Type 선택"
+                        :list="obj.clientTypeList"
+                        option-label="label"
+                        option-value="value"
+                        @on-change="(v:any) => onUpdateTypeSelect(row, v)"
+                    />
                 </template>
             </el-table-column>
-            <el-table-column prop="content" label="내용">
+            <el-table-column prop="content" >
+                <template #header>
+                    내용 <span style="color: red;">*</span>
+                </template>
                 <template #default="{ row }">
                     <div v-if="row.id">{{ row.content }}</div>
                     <el-input v-else v-model="row.content"></el-input>
                 </template>
             </el-table-column>
-            <el-table-column prop="creater" label="작성자" width="120">
+            <el-table-column prop="creater" width="120">
+                <template #header>
+                    작성자 <span style="color: red">*</span>
+                </template>
                 <template #default="{ row }">
                     <div v-if="row.id">{{ row.creater }}</div>
                     <el-input v-else v-model="row.creater"></el-input>
@@ -138,9 +150,25 @@ const deleteHistory = (scope: any) => {
 }
 // 등록 저장
 const submitForm = () => {
+
+    const arr = obj.historyList.filter(item => !('id' in item))
+
+    // TODO: NULL 검사
+    let flag = true;
+    arr.forEach(item => {
+        console.log(item)
+        if(!item.version || !item.updateType || !item.content || !item.creater) {
+            Notification.error('필수값이 누락되어 있습니다.');
+            flag = false;
+            return;
+        }
+    });
+
+    if(!flag) return;
+
     useGlobalDialog('저장하시겠습니까', '확인', 'YN')
         .onConfirm(() => {
-            const arr = obj.historyList.filter(item => !('id' in item))
+
             arr.forEach(item => {
                 obj.createHistory(item)
                     .then((res: any) => {
@@ -153,6 +181,12 @@ const submitForm = () => {
             })
         })
         .onCancel(() => {})
+}
+
+// 구분 드롭다운 클릭 이벤트
+const onUpdateTypeSelect = (row: any, v: any) => {
+    
+    row.updateType = v;
 }
 
 const onCancel = () => {
