@@ -42,7 +42,7 @@
                         <div class="info-btn">
                             <el-button icon="Files" text @click="openCoverPageDialog">표지</el-button>
                             <el-button icon="Files" text @click="openHistoryDialog">개정이력</el-button>
-                            <el-button :icon="Setting" text @click="openEnvironmentSettingDialog">환경설정</el-button>
+                            <el-button :icon="Setting" text @click="openEnvironmentSettingDialog">Host설정</el-button>
                         </div>
                     </template>
                     <el-button type="success" plain @click="testApi">TEST</el-button>
@@ -101,9 +101,7 @@
                     <el-button type="success" plain @click="runApi" :disabled="!detailInfo.requestURL"
                         ><el-icon><CaretRight /></el-icon
                     ></el-button>
-                    <el-button @click="toEditPage(detailInfo)" type="info" plain :disabled="!detailInfo.requestURL"
-                        ><el-icon><Edit /></el-icon
-                    ></el-button>
+                    <el-button @click="toEditPage(detailInfo)" type="info" plain :disabled="!detailInfo.requestURL">수정</el-button>
                 </OperationBox>
                 <el-descriptions size="large" :column="1" border v-loading="isLoading">
                     <el-descriptions-item label="Interface Name" label-align="center">
@@ -206,12 +204,12 @@ const testApi = () => {
         }
         await obj
             .sendData(params)
-            .then(res => {
+            .then((res:any) => {
                 item.testResult = res.result === 200 ? '성공' : '실패'
                 console.log('testApi result:', res)
                 item.responseExample = res.data
             })
-            .catch(error => {
+            .catch((error:any) => {
                 item.testResult = '실패'
                 console.log('testApi error:', error)
                 Message.error(`ERROR:${error.result}, Message: ${error.message} `)
@@ -234,16 +232,16 @@ const runApi = () => {
             }
             detailInfo.value.responseExample = null
             obj.sendData(params)
-                .then(res => {
+                .then((res:any) => {
                     console.log('runApi result:', res)
                     detailInfo.value.responseExample = res.data
                     detailInfo.value.testResult = res.result === 200 ? '성공' : '실패'
                     Notification.success('Request success!')
 
                 })
-                .catch(error => {
+                .catch((error:any) => {
                     detailInfo.value.responseExample = error
-                    Notification.error('ERROR: ' + error.message)
+                    Notification.error('runApi ERROR: ' + error)
 
                 })
             setTimeout(() => {
