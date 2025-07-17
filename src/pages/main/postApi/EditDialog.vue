@@ -9,7 +9,7 @@
     >
     <template #footer>
             <span class="dialog-footer">
-                <el-button @click="onClose" class="POST">취소</el-button>
+                <el-button @click="onClose" class="POST">닫기</el-button>
                 <el-button type="primary" @click="saveData" class="POST">저장</el-button>
             </span>
         </template>
@@ -647,8 +647,8 @@ const validateRequestValues = (formValue:any) => {
 const sendData = async () => {
 
     if(!validateRequestValues(ruleForm.value)) return
-
     ruleForm.value.requestExample = makeRequestParamsData(ruleForm.value)
+
     const params = {
         httpMethod: ruleForm.value.httpMethod,
         headersContentType: ruleForm.value.headersContentType,
@@ -661,7 +661,7 @@ const sendData = async () => {
         ruleForm.value.responseExample = obj.resultData
         ruleForm.value.httpMethod !== 'GETFILE' && checkReponsedData(ruleForm.value.response, obj.resultData)
     }).catch(error => {
-        Notification.error('ERROR: ' + error.message)
+        Notification.error('sendData ERROR---: ',error)
     })
     
 }
@@ -787,8 +787,6 @@ const saveData = () => {
                 if(isEdit.value){
                     obj.updateApi(ruleForm.value).then(res => {
                         Notification.success('수정 성공!', '성공')
-                        onClose()
-                        emits('refreshData')
                     }).catch(error => {
                         Notification.error('수정 실패!', '실패')
                     })
@@ -796,8 +794,6 @@ const saveData = () => {
                 }else{
                     obj.createApi(ruleForm.value).then(res => {
                         Notification.success('등록 성공!', '성공')
-                        onClose()
-                        emits('refreshData')
                     }).catch(error => {
                         Notification.error('등록 실패!', '실패')
                     })
@@ -854,6 +850,8 @@ const onClose = () => {
     ruleFormRef.value?.resetFields()
     ruleForm.value.request = []
     ruleForm.value.response = []
+    emits('refreshData')
+
 
 }
 defineExpose({ openDialog })
