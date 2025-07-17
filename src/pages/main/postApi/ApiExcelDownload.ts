@@ -1,6 +1,6 @@
 import Excel from '@/common/xlsx/Excel.module.js'
 import dayjs from 'dayjs'
-import type { CoverPage } from './model_service/Type'
+import type { CoverPage, RequestType,  ResponseType } from './model_service/Type'
 
 /**
  * 단일 인터페이스 엑셀생성
@@ -11,8 +11,8 @@ import type { CoverPage } from './model_service/Type'
  * 예: makeExcelAndDownload(apiData, '사용자목록 조회', '사용자목록엑셀파일')
  */
 export const makeApiExcelAndDownload = (apiData: any, title: string,  fileName: string) => {
-    const requestList = apiData.request
-    const responseList = apiData.response
+    const requestList:RequestType[] = apiData.request ?? []
+    const responseList:ResponseType[] = apiData.response ?? []
 
     // --------------sheet style ---------------------
     const emptyColumnStyle = {
@@ -84,65 +84,68 @@ export const makeApiExcelAndDownload = (apiData: any, title: string,  fileName: 
     }
     // title에 값이 있으면 테이블 컬럼 해더 행 위에 타이틀 추가
     if (title) {
-        sheet1.data.unshift([{ style: emptyColumnStyle }])
-        sheet1.data.unshift([
+        sheet1.data.push([
             {
-                text: title,
+                text: title??'',
                 colspan: 7,
                 rowspan: 2,
                 style: Object.assign({}, titleStyle),
             },
-            { style: emptyColumnStyle },
+            // { style: emptyColumnStyle },
+            {}, {}, {}, {}, {}, {}
         ])
+        sheet1.data.push([{ style: emptyColumnStyle },{}, {}, {}, {}, {}, {}])
     }
     const sheetData = [
-        [{ text: '인터페이스명', style: formLabelStyle, }, { text: apiData.interfaceName, colspan: 6, style: formValueStyle, }],
-        [{ text: '설명', style: formLabelStyle, }, { text: apiData.description, colspan: 6, style: formValueStyle, }],
-        [{ text: 'Header', style: formLabelStyle, }, { text: apiData.header, colspan: 6, style: formValueStyle, }],
-        [{ text: 'Request URL', style: formLabelStyle, }, { text: apiData.requestURL, colspan: 6, style: formValueStyle, }],
-        [{ text: 'HTTP Method', style: formLabelStyle, }, { text: apiData.httpMethod, colspan: 2, style: formValueStyle, }, { text: 'Required', style: formLabelStyle, },{ text: 'Y: 필수', colspan: 3, style: formValueStyle, }],
-        [{ text: 'Request' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }],
-        [{ text: 'Parameter' , colspan: 4, style: tableHeader, }, { text: 'Required', style: tableHeader,},{ text: 'Type', style: tableHeader, },{ text: 'Description', style: tableHeader, },],
+        [{ text: '인터페이스명', style: formLabelStyle, }, { text: apiData.interfaceName??'', colspan: 6, style: formValueStyle, }, {}, {}, {}, {}, {}],
+        [{ text: '설명', style: formLabelStyle, }, { text: apiData.description??'', colspan: 6, style: formValueStyle, }, {}, {}, {}, {}, {}],
+        [{ text: 'Header', style: formLabelStyle, }, { text: apiData.header??'', colspan: 6, style: formValueStyle, }, {}, {}, {}, {}, {}],
+        [{ text: 'Request URL', style: formLabelStyle, }, { text: apiData.requestURL??'', colspan: 6, style: formValueStyle, }, {}, {}, {}, {}, {}],
+        [{ text: 'HTTP Method', style: formLabelStyle, }, { text: apiData.httpMethod??'', colspan: 2, style: formValueStyle, }, { text: 'Required', style: formLabelStyle, },{ text: 'Y: 필수', colspan: 3, style: formValueStyle, }, {}, {}, {}],
+        [{ text: 'Request' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }, {}, {}, {}, {}, {}, {}],
+        [{ text: 'Parameter' , colspan: 4, style: tableHeader, }, { text: 'Required', style: tableHeader,},{ text: 'Type', style: tableHeader, },{ text: 'Description', style: tableHeader, }, {}, {}, {}],
     ]
-    sheet1.data.push(...sheetData)
+    sheetData.forEach( (item:any) => {
+        sheet1.data.push(item)
+    })
     requestList.forEach((item:any) => {
         if(item.level === 1){
-            sheet1.data.push([{ text: item.parameter, style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+            sheet1.data.push([{ text: item.parameter??'', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
         }
         if(item.level === 2){
-            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: item.parameter, style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: item.parameter??'', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
         }
         if(item.level === 3){
-            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.parameter, style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.parameter??'', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
         }
         if(item.level === 4){
-            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle },{ text: item.parameter, style:tableItemStyle }, { text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle },{ text: item.parameter??'', style:tableItemStyle }, { text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
         }
     })
-    sheet1.data.push([{ text: 'Response' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }])
-    sheet1.data.push([{ text: 'Variable' , colspan: 4, style: tableHeader, }, { text: 'Required', style: tableHeader,},{ text: 'Type', style: tableHeader, },{ text: 'Description', style: tableHeader, },])
+    sheet1.data.push([{ text: 'Response' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }, {}, {}, {}, {}, {}, {}])
+    sheet1.data.push([{ text: 'Variable' , colspan: 4, style: tableHeader, }, { text: 'Required', style: tableHeader,},{ text: 'Type', style: tableHeader, },{ text: 'Description', style: tableHeader, }, {}, {}, {}])
 
     responseList.forEach((item:any) => {
         if(item.level === 1){
-            sheet1.data.push([{ text: item.variable, style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+            sheet1.data.push([{ text: item.variable??'', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
         }
         if(item.level === 2){
-            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: item.variable, style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: item.variable??'', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
         }
         if(item.level === 3){
-            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.variable, style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.variable??'', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
         }
         if(item.level === 4){
-            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle },{ text: item.variable, style:tableItemStyle }, { text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+            sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle },{ text: item.variable??'', style:tableItemStyle }, { text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
         }
     })
-    sheet1.data.push([{ text: 'Request Example' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }])
+    sheet1.data.push([{ text: 'Request Example' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }, {}, {}, {}, {}, {}, {}])
         
-        sheet1.data.push([{ text: `${apiData.requestExample? JSON.stringify(apiData.requestExample, null, 2) : ''}` , colspan: 7 , style: exampleCodeStyle }])
-    sheet1.data.push([{ text: 'Response Example' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }])
-    sheet1.data.push([{ text: `${apiData.responseExample ? JSON.stringify(apiData.responseExample,null,2) : ''}`, colspan: 7 , style: exampleCodeStyle }])
+    sheet1.data.push([{ text: `${apiData.requestExample? JSON.stringify(apiData.requestExample??'', null, 2) : ''}` , colspan: 7 , style: exampleCodeStyle }, {}, {}, {}, {}, {}, {}])
+    sheet1.data.push([{ text: 'Response Example' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }, {}, {}, {}, {}, {}, {}])
+    sheet1.data.push([{ text: `${apiData.responseExample ? JSON.stringify(apiData.responseExample??'',null,2) : ''}`, colspan: 7 , style: exampleCodeStyle }, {}, {}, {}, {}, {}, {}])
 
-
+    console.log('sheet1.data', sheet1.data)
     Excel.make([sheet1], fileName ?? 'downloadExcel' + dayjs(new Date()).format('YYYY-MM-DD'))
 }
 
@@ -293,18 +296,18 @@ export const makeApiExcelAndDownloadAll = (coverPage:CoverPage, historyList:Revi
     coverPageSheet.data.push([ {  text: '', colspan: 8, style: blankRow}])
     coverPageSheet.data.push([ {  text: '', colspan: 8, style: blankRow}])
     coverPageSheet.data.push([ {  text: '', colspan: 8, style: blankRow}])
-    coverPageSheet.data.push([ {  text: '', style: sideColumn }, {  text: coverPage.title1, colspan: 7, style: Object.assign({}, coverTitleStyle)}])
-    coverPageSheet.data.push([ {  text: '', style: sideColumn }, {  text: coverPage.title2, colspan: 7, style: Object.assign({}, coverTitleStyle, { borderBottom: '1px solid #000000'})}])
-    coverPageSheet.data.push([ {  text: '', style: sideColumn }, {  text: coverPage.version, colspan: 7, style: Object.assign({}, coverTitleStyle, {fontSize: 30})}])
+    coverPageSheet.data.push([ {  text: '', style: sideColumn }, {  text: coverPage.title1??'', colspan: 7, style: Object.assign({}, coverTitleStyle)}])
+    coverPageSheet.data.push([ {  text: '', style: sideColumn }, {  text: coverPage.title2??'', colspan: 7, style: Object.assign({}, coverTitleStyle, { borderBottom: '1px solid #000000'})}])
+    coverPageSheet.data.push([ {  text: '', style: sideColumn }, {  text: coverPage.version??'', colspan: 7, style: Object.assign({}, coverTitleStyle, {fontSize: 30})}])
     coverPageSheet.data.push([ {  text: '', colspan: 8, style: Object.assign({}, blankRow)}])
-    coverPageSheet.data.push([ {  text: '', colspan: 5, style: blankRow }, {  text: '배 포 일',  style: coverInfoStyle}, {  text: dayjs(coverPage.publishDate).format('YYYY-MM-DD'),  style: coverInfoStyle}, {  text: '', style: sideColumn }])
-    coverPageSheet.data.push([ {  text: '', colspan: 5, style: blankRow }, {  text: '작 성 자',  style: coverInfoStyle}, {  text: coverPage.creater,  style: coverInfoStyle}, {  text: '', style: sideColumn }])
-    coverPageSheet.data.push([ {  text: '', colspan: 5, style: blankRow }, {  text: '검 토 자',  style: coverInfoStyle}, {  text: coverPage.reviewer,  style: coverInfoStyle}, {  text: '', style: sideColumn }])
-    coverPageSheet.data.push([ {  text: '', colspan: 5, style: blankRow }, {  text: '승 인 자',  style: coverInfoStyle}, {  text: coverPage.approver,  style: coverInfoStyle}, {  text: '', style: sideColumn }])
+    coverPageSheet.data.push([ {  text: '', colspan: 5, style: blankRow }, {  text: '배 포 일',  style: coverInfoStyle}, {  text: dayjs(coverPage.publishDate)?.format('YYYY-MM-DD')??'',  style: coverInfoStyle}, {  text: '', style: sideColumn }])
+    coverPageSheet.data.push([ {  text: '', colspan: 5, style: blankRow }, {  text: '작 성 자',  style: coverInfoStyle}, {  text: coverPage.creater??'',  style: coverInfoStyle}, {  text: '', style: sideColumn }])
+    coverPageSheet.data.push([ {  text: '', colspan: 5, style: blankRow }, {  text: '검 토 자',  style: coverInfoStyle}, {  text: coverPage.reviewer??'',  style: coverInfoStyle}, {  text: '', style: sideColumn }])
+    coverPageSheet.data.push([ {  text: '', colspan: 5, style: blankRow }, {  text: '승 인 자',  style: coverInfoStyle}, {  text: coverPage.approver??'',  style: coverInfoStyle}, {  text: '', style: sideColumn }])
     coverPageSheet.data.push([ {  text: '', colspan: 8, style: blankRow}])
     coverPageSheet.data.push([ {  text: '', colspan: 8, style: blankRow}])
-    coverPageSheet.data.push([ {  text: coverPage.copyright, colspan: 8, style: Object.assign({}, copyrightStyle, { borderTop:'1px solid #000000'})}])
-    coverPageSheet.data.push([ {  text: coverPage.copyrightDescription, colspan: 8, style: Object.assign({}, copyrightStyle)}])
+    coverPageSheet.data.push([ {  text: coverPage.copyright??'', colspan: 8, style: Object.assign({}, copyrightStyle, { borderTop:'1px solid #000000'})}])
+    coverPageSheet.data.push([ {  text: coverPage.copyrightDescription??'', colspan: 8, style: Object.assign({}, copyrightStyle)}])
 
 
     sheetList.push(coverPageSheet)
@@ -317,7 +320,7 @@ export const makeApiExcelAndDownloadAll = (coverPage:CoverPage, historyList:Revi
     historyListSheet.data.unshift([{ style: emptyColumnStyle }])
     historyListSheet.data.unshift([
         {
-            text: historyListSheet.name,
+            text: historyListSheet.name??'',
             colspan: 7,
             rowspan: 2,
             style: Object.assign({}, titleStyle),
@@ -327,7 +330,7 @@ export const makeApiExcelAndDownloadAll = (coverPage:CoverPage, historyList:Revi
     historyListSheet.data.push([{ text: '버전', style: tableTitle }, { text: '변경일', style: tableTitle},{ text: '구분', style:tableTitle }, { text: '내용', style: tableTitle }, { text: '작성자', style:tableTitle }, { text: '검토자', style:tableTitle }, { text: '승인자', style:tableTitle }])
 
     historyList.forEach( (item:RevisionHistory) => {
-        historyListSheet.data.push([{ text: item.version, style:tableItemStyle }, { text: item.updateDate, style: tableItemStyle },{ text: item.updateType, style:tableItemStyle },{ text: item.content, style: Object.assign({}, tableItemStyle, { width: 500}) }, { text: item.creater, style:tableItemStyle }, { text: item.reviewer, style:tableItemStyle }, { text: item.approver, style:tableItemStyle }])
+        historyListSheet.data.push([{ text: item.version??'', style:tableItemStyle }, { text: item.updateDate??'', style: tableItemStyle },{ text: item.updateType??'', style:tableItemStyle },{ text: item.content??'', style: Object.assign({}, tableItemStyle, { width: 500}) }, { text: item.creater??'', style:tableItemStyle }, { text: item.reviewer??'', style:tableItemStyle }, { text: item.approver??'', style:tableItemStyle }])
     })
 
     sheetList.push(historyListSheet)
@@ -341,7 +344,7 @@ export const makeApiExcelAndDownloadAll = (coverPage:CoverPage, historyList:Revi
     interfaceListSheet.data.unshift([{ style: emptyColumnStyle }])
     interfaceListSheet.data.unshift([
         {
-            text: interfaceListSheet.name,
+            text: interfaceListSheet.name??'',
             colspan: 5,
             rowspan: 2,
             style: Object.assign({}, titleStyle),
@@ -351,7 +354,7 @@ export const makeApiExcelAndDownloadAll = (coverPage:CoverPage, historyList:Revi
     interfaceListSheet.data.push([{ text: '인터페이스 명', style: tableTitle }, { text: 'Request URL', style: tableTitle},{ text: 'Http Method', style:tableTitle }, { text: '설명', style: tableTitle }, { text: '구분', style:tableTitle }])
 
     apiDataList.forEach( (item:any) => {
-        interfaceListSheet.data.push([{ text: item.interfaceName, style:Object.assign({}, tableItemStyle, { width: 300})  }, { text: item.requestURL, link:`#'${item.interfaceName}'!G1`, style:Object.assign({}, tableItemStyle, {underline: true, width: 400}) },{ text: item.httpMethod, style:tableItemStyle },{ text: item.description, style: Object.assign({}, tableItemStyle, { width: 500}) }, { text: item.clientType, style:tableItemStyle }])
+        interfaceListSheet.data.push([{ text: item.interfaceName??'', style:Object.assign({}, tableItemStyle, { width: 300})  }, { text: item.requestURL??'', link:`#${item.requestURL??''}!G1`, style:Object.assign({}, tableItemStyle, {underline: true, width: 400}) },{ text: item.httpMethod??'', style:tableItemStyle },{ text: item.description??'', style: Object.assign({}, tableItemStyle, { width: 500}) }, { text: item.clientType??'', style:tableItemStyle }])
     })
 
     sheetList.push(interfaceListSheet)
@@ -361,15 +364,15 @@ export const makeApiExcelAndDownloadAll = (coverPage:CoverPage, historyList:Revi
 
     for( const apiData of apiDataList){
 
-        const requestList = apiData.request
-        const responseList = apiData.response
+        const requestList = apiData.request??[]
+        const responseList = apiData.response??[]
         const requestExample = apiData.requestExample ? JSON.parse(apiData.requestExample) : ''
         const responseExample = apiData.responseExample ? JSON.parse(apiData.responseExample) : ''
 
-        const title = apiData.interfaceName
+        const title = apiData.interfaceName??''
         // sheet 기본 데이터 생성
         const sheet1 = {
-            name: apiData.interfaceName,
+            name: apiData.interfaceName??'',
             data: [] as any, // 컬럼 해더
         }
         // title에 값이 있으면 테이블 컬럼 해더 행 위에 타이틀 추가
@@ -384,7 +387,7 @@ export const makeApiExcelAndDownloadAll = (coverPage:CoverPage, historyList:Revi
                 },
                 {
                     text: '목록',
-                    link: `#'인터페이스 목록'!A1`,
+                    link: `#인터페이스 목록!A1`,
                     rowspan: 2,
                     style: {fontSize: 12, textAlign: 'center', backgroundColor: '#b8cce4', underline: true, color: 'red', borderRight: '1px solid #000000', verticalAlign: 'middle',},
                 },
@@ -392,27 +395,27 @@ export const makeApiExcelAndDownloadAll = (coverPage:CoverPage, historyList:Revi
             ])
         }
         const sheetData = [
-            [{ text: '인터페이스명', style: formLabelStyle, }, { text: apiData.interfaceName, colspan: 6, style: formValueStyle, }],
-            [{ text: '설명', style: formLabelStyle, }, { text: apiData.description, colspan: 6, style: formValueStyle, }],
-            [{ text: 'Header', style: formLabelStyle, }, { text: apiData.header, colspan: 6, style: formValueStyle, }],
-            [{ text: 'Request URL', style: formLabelStyle, }, { text: apiData.requestURL, colspan: 6, style: formValueStyle, }],
-            [{ text: 'HTTP Method', style: formLabelStyle, }, { text: apiData.httpMethod, colspan: 2, style: formValueStyle, }, { text: 'Required', style: formLabelStyle, },{ text: 'Y: 필수', colspan: 3, style: formValueStyle, }],
+            [{ text: '인터페이스명', style: formLabelStyle, }, { text: apiData.interfaceName??'', colspan: 6, style: formValueStyle, }],
+            [{ text: '설명', style: formLabelStyle, }, { text: apiData.description??'', colspan: 6, style: formValueStyle, }],
+            [{ text: 'Header', style: formLabelStyle, }, { text: apiData.header??'', colspan: 6, style: formValueStyle, }],
+            [{ text: 'Request URL', style: formLabelStyle, }, { text: apiData.requestURL??'', colspan: 6, style: formValueStyle, }],
+            [{ text: 'HTTP Method', style: formLabelStyle, }, { text: apiData.httpMethod??'', colspan: 2, style: formValueStyle, }, { text: 'Required', style: formLabelStyle, },{ text: 'Y: 필수', colspan: 3, style: formValueStyle, }],
             [{ text: 'Request' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }],
             [{ text: 'Parameter' , colspan: 4, style: tableHeader, }, { text: 'Required', style: tableHeader,},{ text: 'Type', style: tableHeader, },{ text: 'Description', style: tableHeader, },],
         ]
         sheet1.data.push(...sheetData)
         requestList.forEach((item:any) => {
             if(item.level === 1){
-                sheet1.data.push([{ text: item.parameter, style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+                sheet1.data.push([{ text: item.parameter??'', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
             }
             if(item.level === 2){
-                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: item.parameter, style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: item.parameter??'', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
             }
             if(item.level === 3){
-                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.parameter, style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.parameter??'', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
             }
             if(item.level === 4){
-                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle },{ text: item.parameter, style:tableItemStyle }, { text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle },{ text: item.parameter??'', style:tableItemStyle }, { text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
             }
         })
         sheet1.data.push([{ text: 'Response' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }])
@@ -420,22 +423,22 @@ export const makeApiExcelAndDownloadAll = (coverPage:CoverPage, historyList:Revi
     
         responseList.forEach((item:any) => {
             if(item.level === 1){
-                sheet1.data.push([{ text: item.variable, style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+                sheet1.data.push([{ text: item.variable??'', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
             }
             if(item.level === 2){
-                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: item.variable, style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: item.variable??'', style:tableItemStyle },{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
             }
             if(item.level === 3){
-                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.variable, style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.variable??'', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
             }
             if(item.level === 4){
-                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle },{ text: item.variable, style:tableItemStyle }, { text: item.requiredYn, style:tableItemStyle },{ text: item.type, style:tableItemStyle },{ text: item.description, style:tableItemStyle }])
+                sheet1.data.push([{ text: '', style:tableItemStyle }, { text: '', style:tableItemStyle },{ text: '', style:tableItemStyle },{ text: item.variable??'', style:tableItemStyle }, { text: item.requiredYn??'', style:tableItemStyle },{ text: item.type??'', style:tableItemStyle },{ text: item.description??'', style:tableItemStyle }])
             }
         })
         sheet1.data.push([{ text: 'Request Example' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }])
-        sheet1.data.push([{ text: `${apiData.requestExample? JSON.stringify(requestExample, null, 2) : ''}` , colspan: 7 , style: exampleCodeStyle }])
+        sheet1.data.push([{ text: `${apiData.requestExample? JSON.stringify(requestExample??'', null, 2) : ''}` , colspan: 7 , style: exampleCodeStyle }])
         sheet1.data.push([{ text: 'Response Example' , colspan: 7 , style: Object.assign({}, tableTitle, { height: 30}) }])
-        sheet1.data.push([{ text: `${apiData.responseExample ? JSON.stringify(responseExample,null,2) : ''}`, colspan: 7 , style: exampleCodeStyle }])
+        sheet1.data.push([{ text: `${apiData.responseExample ? JSON.stringify(responseExample??'',null,2) : ''}`, colspan: 7 , style: exampleCodeStyle }])
         sheetList.push(sheet1)
     }    
 
