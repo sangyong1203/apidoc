@@ -79,8 +79,9 @@ export class Service {
             requestURL,
             requestParams,
         }
+        console.log('sendData')
         const res = await api.sendApi(param)
-        this.resultData = res.data
+        this.resultData = res
         return res
     }
     async getApiList(params: {

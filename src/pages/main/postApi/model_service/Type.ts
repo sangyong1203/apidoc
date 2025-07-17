@@ -79,6 +79,7 @@ export type MenuDeletePrams = Pick<MenuModel, 'id'>
 
 // 개정 이력 
 export type RevisionHistory = {
+    id?: number
     version: string
     updateDate: string
     updateType: string

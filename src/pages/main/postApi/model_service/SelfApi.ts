@@ -24,7 +24,6 @@ export default {
         if (params.httpMethod === 'GET') {
             const payload: PayloadModel = { query: params.requestParams }
 
-
             res = await fetch().get(host + params.requestURL, {
                 payload,
                 // headers: { Authorization: params.environmentSetting.authToken },
@@ -264,7 +263,7 @@ export default {
     async checkDuplicateApi(requestURL: string) {
         const db = await openDataBase()
         const transaction = db.transaction('apiTable', 'readonly')
-        const store = transaction.objectStore('apiTable')
+        transaction.objectStore('apiTable')
     },
     // ------------------------------------------------------------------------------------
 
