@@ -48,14 +48,14 @@ export default defineConfig(({ mode })=>{
   
     server: {
       proxy: {
-        '/api': {
-          // target: 'http://192.168.0.122:8082',
-          target: 'http://localhost:8082',
-          // target: 'http://localhost:8083',
+        // '/api': {
+        //   // target: 'http://192.168.0.122:8082',
+        //   target: 'http://localhost:8082',
+        //   // target: 'http://localhost:8083',
 
-          changeOrigin: true,
-          //   rewrite: path => path.replace(/^\/api/, '')
-        },
+        //   changeOrigin: true,
+        //   //   rewrite: path => path.replace(/^\/api/, '')
+        // },
         // '/batch': {
         //   target: 'http://192.168.0.122:8083',
         //   //target: 'http://localhost:8083',
