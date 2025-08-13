@@ -1,6 +1,6 @@
 {
   "name": "apidoc-p",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "private": false,
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-    "deploy": "gh-pages -d dist -r https://github.com/sangyong1203/apidoc.git"
+    "deploy": "vite build --mode github && gh-pages -d dist -r https://github.com/sangyong1203/apidoc.git"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
