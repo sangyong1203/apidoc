@@ -11,7 +11,7 @@ import Components from 'unplugin-vue-components/vite'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode })=>{
   return {
-    base: '/apidoc/',
+    base: './',
     // base:'https://example.com',
     plugins: [
       vue(),
@@ -43,25 +43,6 @@ export default defineConfig(({ mode })=>{
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-      },
-    },
-  
-    server: {
-      proxy: {
-        // '/api': {
-        //   // target: 'http://192.168.0.122:8082',
-        //   target: 'http://localhost:8082',
-        //   // target: 'http://localhost:8083',
-
-        //   changeOrigin: true,
-        //   //   rewrite: path => path.replace(/^\/api/, '')
-        // },
-        // '/batch': {
-        //   target: 'http://192.168.0.122:8083',
-        //   //target: 'http://localhost:8083',
-        //   changeOrigin: true,
-        //   //   rewrite: path => path.replace(/^\/api/, '')
-        // },
       },
     },
   
