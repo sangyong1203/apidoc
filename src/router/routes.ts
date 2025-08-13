@@ -12,7 +12,7 @@ export const routes:RouteRecordRaw[] = [
 
             // api dco 
             {
-                path: '/postApi',
+                path: '',
                 name: 'postApi',
                 component: () => import('@/pages/main/postApi/index.vue'),
             },
