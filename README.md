@@ -22,13 +22,16 @@ API 테스트, 문서 자동 작성을 위한 시스템입니다.
 
 ## 설치 및 실행 명령어
 ```
-    git clone http://192.168.0.121:3000/devops/postapi.git
+    git clone https://github.com/sangyong1203/apidoc.git
     cd postapi
     npm install
     npm run dev
 
     npm run type-check // 타입체크 명령어 
     npm run build
+
+    //--to publish
+    npm publish
 ```
 
 ---
