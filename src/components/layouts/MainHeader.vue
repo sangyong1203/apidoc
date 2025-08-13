@@ -15,9 +15,9 @@
                     <div class="header-right">
                         <CurrentTime label="현재시간"/>
                         <DarkModeSwitcher/>
-                        <el-button type="primary" circle @click="logOut()" class="logout" >
+                        <!-- <el-button type="primary" circle @click="logOut()" class="logout" >
                             <el-icon ><SwitchButton/></el-icon>
-                        </el-button>
+                        </el-button> -->
                         <el-button type="primary" circle @click="refresh()" class="refresh">
                             <el-icon><Refresh /></el-icon>
                         </el-button>

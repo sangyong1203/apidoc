@@ -31,7 +31,7 @@ export const useLangStore = defineStore(
         // 로컬에 있는 다국어 파일 사용하여 언어 설정 (파일폴더 경로: public/langFile)
         const setLangFromExcelFile = async (languageType: string) => {
             try {
-                const response = await fetch(`/langFile/${languageType}_lang.xlsx`)
+                const response = await fetch(`./langFile/${languageType}_lang.xlsx`)
                 const arrayBuffer = await response.arrayBuffer()
                 const workbook = XLSX.read(arrayBuffer, { type: 'array' })
                 const firstSheetName = workbook.SheetNames[0]
