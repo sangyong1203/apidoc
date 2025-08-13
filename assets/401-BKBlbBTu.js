@@ -1,0 +1,1 @@
+import{a7 as t,c,a as o,b as s,az as r}from"./components-fWdxpjzF.js";/* empty css                 */const a={},n={class:"error",style:{height:"100%"}};function l(_,i){const e=r;return o(),c("div",n,[s(e,{style:{height:"100%"},title:"IP 제한",type:"info",description:"승인되지 않은 IP 주소 입니다. 관리자에게 문의하세요",closable:!1,center:""})])}const d=t(a,[["render",l]]);export{d as default};
