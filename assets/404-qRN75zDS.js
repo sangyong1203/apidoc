@@ -1,1 +1,0 @@
-import{a7 as t,c,a as o,b as s,az as r}from"./components-d_00-cMi.js";/* empty css                 */const a={},n={class:"error",style:{height:"100%"}};function l(_,i){const e=r;return o(),c("div",n,[s(e,{style:{height:"100%"},title:"주소 오류",type:"info",description:"요청하신 페이지를 찾을 수 없습니다.URL을 확인해 주세요.",closable:!1,center:""})])}const d=t(a,[["render",l]]);export{d as default};

@@ -1,0 +1,1 @@
+import{a7 as t,c,a as o,b as s,az as r}from"./components--DPkjz1V.js";/* empty css                 */const a={},n={class:"error",style:{height:"100%"}};function l(_,i){const e=r;return o(),c("div",n,[s(e,{style:{height:"100%"},title:"허용되지 않은 페이지",type:"info",description:"접근할 수 없는 페이지입니다.관리자에게 문의하세요",closable:!1,center:""})])}const d=t(a,[["render",l]]);export{d as default};
