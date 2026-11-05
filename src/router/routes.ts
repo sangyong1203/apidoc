@@ -5,16 +5,16 @@ export const routes:RouteRecordRaw[] = [
     // ----- 메인 관리 페이지 -----
     {
         path: '/',
-        redirect: { name: 'postApi' },
+        redirect: { name: 'apidoc' },
         name: 'main',
         component: () => import('@/pages/main/index.vue'),
         children: [
 
             // api dco 
             {
-                path: '/postApi',
-                name: 'postApi',
-                component: () => import('@/pages/main/postApi/index.vue'),
+                path: '/apidoc',
+                name: 'apidoc',
+                component: () => import('@/pages/main/apidoc/index.vue'),
             },
 
             /** -------에러 페이지------------ **/ 

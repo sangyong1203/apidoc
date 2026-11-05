@@ -2,7 +2,7 @@
     <MainLayout copyright="© Copyright *** All rights reserved.">
         <template #main-header>
             <MainHeader
-                systemName="Postapi"
+                systemName="ApiDoc"
                 :title-style="{ fontWeight: 'bold', fontSize: '24px', color: '#dbdbdb' }"
             >
             </MainHeader>

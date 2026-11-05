@@ -43,7 +43,7 @@ const tempMenu = [
             {
                 id: 81,
                 title: 'API',
-                path: '/postApi',
+                path: '/apidoc',
                 icon: '',
                 authAction: 'GET,PUT,POST,DELETE',
                 useYn: 'Y',

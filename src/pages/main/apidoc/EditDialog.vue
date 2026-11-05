@@ -288,7 +288,7 @@ import { reactive, ref, computed } from 'vue'
 import { Service } from './model_service/Service.ts'
 import { ElMessageBox, type UploadFile, type UploadFiles } from 'element-plus'
 import { makeApiExcelAndDownload } from './ApiExcelDownload.ts'
-import type { PostApiModel, RequestType } from './model_service/Type.ts'
+import type { ApiDocModel, RequestType } from './model_service/Type.ts'
 
 const obj = reactive(new Service())
 const createId = (): string =>{
@@ -297,7 +297,7 @@ const createId = (): string =>{
 const isEdit = ref(false)
 const requestCode = ref<HTMLElement>()
 
-const ruleForm = ref<PostApiModel>(obj.apiItem)
+const ruleForm = ref<ApiDocModel>(obj.apiItem)
 const ruleFormRef:any = ref(null)
 
 const requiredYnList = [
